@@ -1,0 +1,6 @@
+requests
+datetime
+json
+subprocess
+uuid
+duckduckgo_search

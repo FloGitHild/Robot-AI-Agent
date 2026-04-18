@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
+from email import message
 import os
 import time
 import Task_Manager
-
+import create_JSON
 TODO_FILE = "ToDo.txt"
 
 # Ensure file exists
@@ -43,6 +44,17 @@ while True:
     for task in task_list:
         task_id, scheduled_time, name, description, priority = task
         print(f"Task: {name} | Description: {description} | Priority: {priority}")
+        
+
+        # Inputs:
+        # mode: PLAY, ASSIST, EXPLORE, AUTO, IDLE
+        # vision: current vision input (can be empty)
+        # task: current task description
+        # message: user input (can be empty)
+
+        #generate promt based on task and execute it
+        create_JSON.create_json(mode, vision, task, message, datetime.now());
+
 
         # Delete executed task
         Task_Manager.delete_task(TODO_FILE, task_id)
