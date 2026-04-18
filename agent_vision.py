@@ -218,7 +218,7 @@ def save_new_face(frame, name):
 # =========================
 # MAIN
 # =========================
-def create_vision_json():
+def create_vision_data():
     frame = pick_frame()
     if frame is None:
         return None
@@ -259,4 +259,4 @@ def create_vision_json():
 # RUN
 # =========================
 if __name__ == "__main__":
-    print(create_vision_json())
+    print(create_vision_data())

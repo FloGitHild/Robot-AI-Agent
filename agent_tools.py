@@ -83,3 +83,4 @@ def movement(dir, speed):
 
 def append_gallery(time, comment):
     print(f"Appending gallery at time {time} with comment: {comment}")
+

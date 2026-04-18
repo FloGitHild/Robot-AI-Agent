@@ -1,4 +1,5 @@
 import json
+import agent_vision
 import settings
 
 def create_json(mode, vision, task, message, time):
@@ -25,7 +26,7 @@ def create_json(mode, vision, task, message, time):
             "llm_modell": settings.local_llm_model,
             "role_content": role_content,
             "message": message,
-            "vision": vision,
+            "vision": agent_vision.create_vision_data(),
             "task": task,
             "time": time
         }
