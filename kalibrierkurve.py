@@ -1,9 +1,3 @@
-"""
-Kalibrierkurve: Ablenkwinkel δmin gegen Wellenlänge λ
-=====================================================
-Einfacher Code für das Prismenspektrometer-Protokoll
-"""
-
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -14,24 +8,9 @@ import matplotlib.pyplot as plt
 # Wellenlängen der He-Linien in nm
 lambda_nm = np.array([706.54, 667.82, 587.56, 501.57, 492.19, 447.15, 438.79])
 
-# Farben zuordnen
-farben = ['Dunkelrot', 'Rot', 'Gelb', 'Grün', 'Blaugrün', 'Blau', 'Violett']
-
 # Gemessene Ablenkwinkel (bereits gemittelt aus Links/Rechts)
 delta_min = np.array([46.8542, 47.0375, 47.5875, 48.5167, 48.6583, 48.9958, 49.4917])
 
-# =============================================================================
-# 2. AUSGABE DER TABELLARISCHEN DATEN
-# =============================================================================
-
-print("=" * 55)
-print("Tabelle: Wellenlänge und Ablenkwinkel")
-print("=" * 55)
-print(f"{'Farbe':<12} {'λ (nm)':>10} {'δmin (°)':>12}")
-print("-" * 55)
-for i in range(len(lambda_nm)):
-    print(f"{farben[i]:<12} {lambda_nm[i]:>10.2f} {delta_min[i]:>12.4f}")
-print("=" * 55)
 
 # =============================================================================
 # 3. PLOT DER KALIBRIERKUUVE
@@ -64,24 +43,5 @@ plt.legend()
 plt.tight_layout()
 
 # Speichern
-plt.savefig('kalibrierkurve_delta_lambda.png', dpi=150)
+plt.savefig('kalibrierkurve_delta_lambda.png', dpi=300)
 print("\nBild gespeichert: kalibrierkurve_delta_lambda.png")
-
-# Anzeigen
-plt.show()
-
-# =============================================================================
-# 4. PHYSIKALISCHE ERKLÄRUNG
-# =============================================================================
-
-print("\n" + "=" * 55)
-print("Physikalische Erklärung:")
-print("=" * 55)
-print("""
-Die Kalibrierkurve zeigt: Je kürzer die Wellenlänge, desto größer 
-der Ablenkwinkel. Dies ist die normale Dispersion.
-
-Kurzwelliges (blaues) Licht wird stärker gebrochen als langwelliges 
-(rotes) Licht. Daher entsteht im Prisma ein Spektrum von Violett 
-(bis Blau) nach Rot.
-""")
