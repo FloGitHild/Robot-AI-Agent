@@ -1,258 +1,128 @@
-================================================================================
-            PRISMENSPEKTROMETER - PROTOKOLL ZUR AUSWERTUNG
-================================================================================
-
-Versuchsdurchführung:    Datum: _______________
-Protokollpartner:        _______________
-Gruppennummer:           _______________
 
 ================================================================================
-                    AUFGABE 4: AUSWERTUNG DER MESSUNGEN
+                    PRISMENSPEKTROMETER - AUSWERTUNG
 ================================================================================
 
-================================================================================
-4.1 He-Lampe: Mittlerer Ablenkwinkel
-================================================================================
+1. GRUNDLAGEN
+-------------
+Formel für Brechungsindex aus minimalem Ablenkwinkel:
+    n = sin((δmin + γ)/2) / sin(γ/2)
 
-Die Messungen wurden für die spiegelbildliche Stellung des Prismas (links und 
-rechts) durchgeführt. Der mittlere Ablenkwinkel δmin ergibt sich aus dem 
-Mittelwert der beiden Messungen.
-
-Tabelle 1: Wellenlängen und Ablenkwinkel der He-Linien
------------------------------------------------------------------
-Farbe        | λ (nm)  | δmin,Links (°) | δmin,Rechts (°) | δmin (°)
------------------------------------------------------------------
-Dunkelrot    | 706.54  | 47,0083        | 46,7000         | 46,8542
-Rot          | 667,82  | 47,1750        | 46,9000         | 47,0375
-Gelb         | 587,56  | 47,7250        | 47,4500         | 47,5875
-Grün         | 501,57  | 48,6500        | 48,3833         | 48,5167
-Blaugrün     | 492,19  | 48,7917        | 48,5250         | 48,6583
-Blau         | 447,15  | 49,1083        | 48,8833         | 48,9958
-Violett      | 438,79  | 49,6000        | 49,3833         | 49,4917
------------------------------------------------------------------
-
-Die Messwerte zeigen die expectede Zunahme des Ablenkwinkels mit abnehmender 
-Wellenlänge (normale Dispersion).
-
+Cauchy-Dispersionsformel:
+    n(λ) = A + B/λ²      (λ in μm)
 
 ================================================================================
-4.2 Berechnung der Brechungsindices
+2. MESSDATEN UND ZWISCHENERGEBNISSE
 ================================================================================
 
-Der Brechungsindex wird mit der Formel (2) aus dem Skript berechnet:
-
-                 sin((δmin + γ)/2)
-        n = -------------------------------
-                 sin(γ/2)
-
-mit dem Prismenwinkel γ = 29,9917°
-
-Tabelle 2: Brechungsindices für die verschiedenen Wellenlängen
------------------------------------------------------------------
-Farbe        | λ (nm)  | δmin (°)  | n
------------------------------------------------------------------
-Dunkelrot    | 706,54  | 46,8542   | 2,4018
-Rot          | 667,82  | 47,0375   | 2,4066
-Gelb         | 587,56  | 47,5875   | 2,4211
-Grün         | 501,57  | 48,5167   | 2,4455
-Blaugrün     | 492,19  | 48,6583   | 2,4492
-Blau         | 447,15  | 48,9958   | 2,4580
-Violett      | 438,79  | 49,4917   | 2,4708
------------------------------------------------------------------
-
-Alle Brechungsindices sind > 1, wie physikalisch erforderlich.
-
-[Hier Bild einfügen: kalibrierkurve_delta_lambda.png]
-Bild 1: Kalibrierkurve - Ablenkwinkel δmin gegen Wellenlänge λ
-
-
-================================================================================
-4.3 Kalibrierkurve δmin(λ)
-================================================================================
-
-Die Kalibrierkurve zeigt den Zusammenhang zwischen dem Ablenkwinkel und der 
-Wellenlänge. Man erkennt deutlich, dass kürzere Wellenlängen stärker abgelenkt 
-werden als längere.
-
-[Diagramm: Siehe Abbildung 1 - kalibrierkurve_delta_lambda.png]
-
-
-================================================================================
-4.4 Dispersionskurve n(λ) und Cauchy-Fit
-================================================================================
-
-Die Dispersionskurve wurde mit der Cauchy-Formel angepasst:
-
-        n(λ) = A + B/λ²        (λ in μm)
-
-Die Anpassung erfolgte mit Python (scipy.optimize.curve_fit).
-
-Cauchy-Parameter (Fit-Ergebnis):
---------------------------------
-    A = 2,3614 ± 0,0119    (95% Konfidenzintervall)
-    B = 0,00871 ± 0,00136 μm²
-
-Tabelle 3: Vergleich mit Materialtabelle aus dem Skript
-------------------------------------
-Material     | A       | B (μm²)   | Abweichung B
-------------------------------------
-Quartzglas   | 1,4580  | 0,00354   | 146,2%
-BK7          | 1,5046  | 0,00420   | 107,5%
-K5           | 1,5220  | 0,00459   | 89,9%
-BaK4         | 1,5690  | 0,00531   | 64,1%
-F2           | 1,5904  | 0,00571   | 52,6%
-BaF10        | 1,6700  | 0,00743   | 17,3%
-SF10         | 1,7280  | 0,01342   | 35,1%
-------------------------------------
-Gemessen     | 2,3614  | 0,00871   | --
-
-Deutung:
-Das Prisma zeigt in der Dispersion (B-Wert) die größte Ähnlichkeit mit 
-Barium-Flintglas (BaF10). Allerdings ist der absolute Brechungsindex 
-deutlich höher als bei allen Standardgläsern. Dies deutet auf einen 
-systematischen Messfehler hin (siehe Diskussion).
-
-[Hier Bild einfügen: dispersionskurve_n_lambda.png]
-Bild 2: Dispersionskurve n(λ) mit Cauchy-Anpassung
-
-
-================================================================================
-4.5 Fehlerabschätzung für die Brechungsindices
-================================================================================
-
-Die Messunsicherheit des Brechungsindex wird mit der Formel (4) aus dem 
-Skript berechnet:
-
-           u(n)          /      u(δmin)          \²       /      u(γ)         \²
-    ---------------- = √ | -------------------  |   +   | -------------------  |
-           n              \   cot((δmin+γ)/2)    /       \     cot(γ/2)       /
-
-Verwendete Unsicherheiten:
-    u(γ)     = 0,5' = 0,00833°           (geschätzt aus Noniusablesung)
-    u(δmin)  = 0,5' = 0,00833°           (geschätzt aus Noniusablesung)
-
-Tabelle 4: Brechungsindices mit Fehlern
------------------------------------------------------------------
-Farbe        | λ (nm)  | n         | u(n)      | u(n)/n (%)
------------------------------------------------------------------
-Dunkelrot    | 706,54  | 2,401793  | 0,025266  | 1,05%
-Rot          | 667,82  | 2,406635  | 0,025234  | 1,05%
-Gelb         | 587,56  | 2,421121  | 0,025138  | 1,04%
-Grün         | 501,57  | 2,445467  | 0,024974  | 1,02%
-Blaugrün     | 492,19  | 2,449165  | 0,024949  | 1,02%
-Blau         | 447,15  | 2,457959  | 0,024889  | 1,01%
-Violett      | 438,79  | 2,470841  | 0,024801  | 1,00%
------------------------------------------------------------------
-
-Die relativen Fehler liegen bei etwa 1%.
-
-[Hier Bild einfügen: dispersionskurve_mit_fehlern.png]
-Bild 3: Dispersionskurve n(λ) mit Fehlerbalken
-
-
-================================================================================
-4.6 Herleitung der Fehlerfortpflanzungsformel (4)
-================================================================================
-
-Ausgangsgleichung (Gl. 2 im Skript):
-    
-        n = sin((δmin + γ)/2) / sin(γ/2)
-
-Partielle Ableitungen nach δmin und γ:
-
-    ∂n/∂δmin = [cos((δmin+γ)/2) / sin(γ/2)] · 1/2
-
-    ∂n/∂γ    = [cos((δmin+γ)/2) / sin(γ/2)] · 1/2 
-               - [cos(γ/2) · sin((δmin+γ)/2) / sin²(γ/2)] · 1/2
-
-Gauß'sche Fehlerfortpflanzung:
-
-    u²(n) = (∂n/∂δmin)² · u²(δmin) + (∂n/∂γ)² · u²(γ)
-
-Nach trigonometrischen Umformungen und Vereinfachung erhält man:
-
-    u(n)/n = √[ cot²((δmin+γ)/2) · u²(δmin) + cot²(γ/2) · u²(γ) ]
-
-Dies ist genau die im Skript angegebene Gleichung (4).
-
-Dabei wurden folgende Beziehungen verwendet:
-    - Quotientenregel für Ableitungen
-    - Identität: cot(x) = cos(x)/sin(x)
-    - Kettenregel
-
-
-================================================================================
-                    AUFGABE 5: HINWEISE ZUR VORBEREITUNG
-================================================================================
-
-(Diese Aufgabe bezieht sich auf die Versuchsvorbereitung, nicht auf die 
-Auswertung. Die Vorbereitungsfragen wurden im Messprotokoll beantwortet.)
-
-Vorbereitungsfragen:
---------------------
-5.1 Grundbegriffe:
-    - Brechungsindex: n = c₀/cm (Verhältnis Lichtgeschwindigkeit Vakuum/Materie)
-    - Dispersion: Wellenlängenabhängigkeit des Brechungsindex
-    - Prismenspektrometer: Gerät zur Spektralanalyse mittels Brechung im Prisma
-    - Auflösungsvermögen: A = λ/Δλ (Fähigkeit, benachbarte Linien zu trennen)
-    - Spektren: kontinuierlich (Glühlampe), Linien (Gasentladung), Banden (LED)
-
-5.2 Versuchsdurchführung:
-    - Das Prisma wurde mit der brechenden Kante zum Kollimator aufgestellt
-    - Die Minimalablenkung wurde durch Drehen des Prismas ermittelt
-    - Die Spiegelbildermethode wurde zur Bestimmung von γ verwendet
-
-================================================================================
-                          ZUSAMMENFASSUNG
-================================================================================
-
-Messergebnisse:
-- Prismenwinkel γ = 29,9917°
-- Nullrichtung = 359,525°
-- 7 Spektrallinien vermessen (438,79 nm bis 706,54 nm)
-- Brechungsindices: n = 2,40 bis 2,47
-
-Cauchy-Parameter:
-- A = 2,3614 ± 0,0119
-- B = 0,00871 ± 0,00136 μm²
-
-Fehler:
-- Relative Unsicherheit der Brechungsindices: ca. 1%
-- 95%-Konfidenzintervalle für Cauchy-Parameter berechnet
-
-Diskussion:
-- Normale Dispersion liegt vor (n nimmt mit abnehmender λ zu)
-- Der B-Wert entspricht am ehesten BaF10 (Barium-Flintglas)
-- Der absolute Brechungsindex ist deutlich höher als erwartet (~2,4 statt ~1,7)
-- Dies deutet auf einen systematischen Fehler hin:
-  * Mögliche Ursachen: 
-    - Falsche Nullrichtung (die Korrektur von -0,475' könnte unvollständig sein)
-    - Justagefehler des Spektrometers
-    - Parallaxe beim Ablesen der Winkelskala
-  * Eine mögliche Korrektur würde den Brechungsindex um etwa 0,7 reduzieren
-
-================================================================================
-                          ANHANG
-================================================================================
-
-Verwendete Formeln:
+2.1 Prismenwinkel γ
 -------------------
-(1) Brechungsgesetz: n₁·sin(α₁) = n₂·sin(α₂)
-(2) Brechungsindex aus Prisma: n = sin((δmin+γ)/2) / sin(γ/2)
-(3) Cauchy-Formel: n(λ) = A + B/λ²
-(4) Fehlerfortpflanzung: u(n)/n = √[cot²((δ+γ)/2)·u²(δ) + cot²(γ/2)·u²(γ)]
+φI (links) = 253.5667°
+φII (rechts) = 313.5500°
+γ = (φII - φI) / 2 = 29.9917°
 
-Verwendete Programme:
----------------------
-- Python 3.12 mit NumPy, SciPy, Matplotlib, Pandas
-- Datei: Prismenspektrometer_Auswertung.py
+2.2 Nullrichtung
+----------------
+Nullrichtung = 359.525°
+Korrekturfaktor = -0.475'
+
+2.3 Ablenkwinkel δmin (Tabelle)
+-------------------------------
+Farbe            λ (nm)     δmin (°)
+--------------------------------------
+Dunkelrot        706.54      46.8542
+Rot              667.82      47.0375
+Gelb             587.56      47.5875
+Grün             501.57      48.5167
+Blaugrün         492.19      48.6583
+Blau             447.15      48.9958
+Violett          438.79      49.4917
+
+================================================================================
+3. ERGEBNISSE: BRECHUNGSINDEX n(λ)
+================================================================================
+
+Farbe          λ (nm)   δmin (°)            n         u(n)
+------------------------------------------------------------
+Dunkelrot      706.54    46.8542     2.401793     0.025266
+Rot            667.82    47.0375     2.406635     0.025234
+Gelb           587.56    47.5875     2.421121     0.025138
+Grün           501.57    48.5167     2.445467     0.024974
+Blaugrün       492.19    48.6583     2.449165     0.024949
+Blau           447.15    48.9958     2.457959     0.024889
+Violett        438.79    49.4917     2.470841     0.024801
+
+================================================================================
+4. Cauchy-Fit: n(λ) = A + B/λ²
+================================================================================
+
+Angepasste Parameter:
+    A = 2.361354 ± 0.011897 (95% Konfidenzintervall)
+    B = 0.008714 ± 0.001360 μm²
+
+Materialidentifikation:
+    Das Prisma ist am ähnlichsten zu BaF10 (Barium-Flintglas):
+    - BaF10: A = 1.6700, B = 0.00743 μm²
+    - Gemessen: A = 2.3614, B = 0.00871 μm²
+    
+    Allerdings ist der absolute Brechungsindex deutlich höher als erwartet,
+    was auf einen systematischen Fehler in der Winkelmessung hindeutet.
+
+Vergleich mit Materialtabelle aus Skript:
+    Material      | A       | B (μm²)
+    --------------|---------|----------
+    Quarzglas     | 1.4580  | 0.00354
+    BK7          | 1.5046  | 0.00420
+    K5           | 1.5220  | 0.00459
+    BaK4         | 1.5690  | 0.00531
+    F2           | 1.5904  | 0.00571
+    BaF10        | 1.6700  | 0.00743
+    SF10         | 1.7280  | 0.01342
+    ---
+    Gemessen     | 2.3614  | 0.00871
+
+================================================================================
+5. FEHLERANALYSE
+================================================================================
 
 Messunsicherheiten:
--------------------
-- Winkelmessung: ± 0,5' (eine Nonius-Einheit)
-- Prismenwinkel γ: ± 0,5'
-- Alle Winkel in Bogenmaß für Fehlerrechnung umgerechnet
+    u(γ) = 0.0083' = 0.000139°
+    u(δmin) ≈ 0.5' = 0.008333° (geschätzt aus Noniusablesung)
+
+Relative Fehler der Brechungsindices nach Formel (4):
+    u(n)/n = √[ cot²(γ/2)·u²(γ) + cot²((δ+γ)/2)·u²(δ) ]
+
+Die Fehler sind in der obigen Tabelle angegeben (ca. 1% rel. Fehler).
 
 ================================================================================
-                           ENDE DES PROTOKOLLS
+6. HERLEITUNG DER FEHLERFORTPFLANZUNGSFORMEL (4)
+================================================================================
+
+Ausgangsgleichung:
+    n = sin((δmin + γ)/2) / sin(γ/2)
+
+Partielle Ableitungen (Kettenregel):
+    ∂n/∂δ = [cos((δ+γ)/2) / sin(γ/2)] · (1/2)
+    ∂n/∂γ = [cos((δ+γ)/2) / sin(γ/2)] · (1/2) - [cos(γ/2) · sin((δ+γ)/2) / sin²(γ/2)] · (1/2)
+
+Mit den Ableitungen und der Gauß'schen Fehlerfortpflanzung:
+    u²(n) = (∂n/∂δ)² · u²(δ) + (∂n/∂γ)² · u²(γ)
+    
+Nach Vereinfachung (vgl. Skript Gleichung 4):
+    u(n)/n = √[ cot²((δ+γ)/2) · u²(δ) + cot²(γ/2) · u²(γ) ]
+
+Dies entspricht genau der im Skript angegebenen Formel (4).
+
+================================================================================
+7. DISKUSSION
+================================================================================
+
+- Der Brechungsindex nimmt mit abnehmender Wellenlänge zu (normale Dispersion)
+- Die Messwerte folgen gut der Cauchy-Formel (guter Fit)
+- Die ermittelten Parameter A und B sind am nächsten an BaF10
+- Der hohe absolute Wert von n (ca. 2.4 statt erwartet ~1.7) deutet auf 
+  einen systematischen Fehler hin (z.B. falsche Nullrichtung, Justagefehler)
+
+================================================================================
+                        ENDE DER AUSWERTUNG
 ================================================================================
