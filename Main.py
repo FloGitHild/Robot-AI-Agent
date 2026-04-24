@@ -1,9 +1,13 @@
 from datetime import datetime, timedelta
-from email import message
 import os
 import time
+from urllib import response
 import Task_Manager
+import agent_call
+import agent_tools
+import agent_vision
 import create_JSON
+import settings
 TODO_FILE = "ToDo.txt"
 
 # Ensure file exists
@@ -11,31 +15,6 @@ if not os.path.exists(TODO_FILE):
     with open(TODO_FILE, "w"):
         pass
 
-# Create example tasks
-time_30 = (datetime.now() + timedelta(seconds=30)).strftime("%Y-%m-%d %H:%M:%S")
-time_20 = (datetime.now() + timedelta(seconds=20)).strftime("%Y-%m-%d %H:%M:%S")
-time_10 = (datetime.now() + timedelta(seconds=10)).strftime("%Y-%m-%d %H:%M:%S")
-
-# Tasks scheduled for 30 seconds later
-Task_Manager.add_task(TODO_FILE, time_30, "Task1", "This is the first task", 1)
-Task_Manager.add_task(TODO_FILE, time_30, "Task2", "This is the second task", 2)
-Task_Manager.add_task(TODO_FILE, time_30, "Task3", "This is the third task", 3)
-
-# Tasks scheduled for 20 seconds later
-Task_Manager.add_task(TODO_FILE, time_20, "Task4", "This is the fourth task", 5)
-Task_Manager.add_task(TODO_FILE, time_20, "Task5", "This is the fifth task", 4)
-Task_Manager.add_task(TODO_FILE, time_20, "Task6", "This is the sixth task", 1)
-Task_Manager.add_task(TODO_FILE, time_20, "Task7", "This is the seventh task", 2)
-Task_Manager.add_task(TODO_FILE, time_20, "Task8", "This is the eighth task", 6)
-Task_Manager.add_task(TODO_FILE, time_20, "Task9", "This is the ninth task", 2)
-
-# Tasks scheduled for 10 seconds later
-Task_Manager.add_task(TODO_FILE, time_10, "Task10", "This is the tenth task", 5)
-Task_Manager.add_task(TODO_FILE, time_10, "Task11", "This is the eleventh task", 3)
-Task_Manager.add_task(TODO_FILE, time_10, "Task12", "This is the twelfth task", 4)
-Task_Manager.add_task(TODO_FILE, time_10, "Task13", "This is the thirteenth task", 1)
-Task_Manager.add_task(TODO_FILE, time_10, "Task14", "This is the fourteenth task", 2)
-Task_Manager.add_task(TODO_FILE, time_10, "Task15", "This is the fifteenth task", 3)
 
 # Continuous monitoring loop
 while True:
@@ -52,11 +31,19 @@ while True:
         # task: current task description
         # message: user input (can be empty)
 
+        settings.CURRENT_MODE = "AUTO" # This can be set based on the task or other conditions
         #generate promt based on task and execute it
-        create_JSON.create_json(mode, vision, task, message, datetime.now());
+        
+        # first call of the LLM to get the tools to execute, then execute the tools and call the LLM again to get the final answer
+        message = "no user input"
+        create_JSON.create_json(settings.CURRENT_MODE, agent_vision.create_vision_data(), task, message, datetime.now());
+        llm_result = agent_call()
+        tool_results = agent_tools(llm_result)
 
-
+        #prepare final prompt with tool results and call LLM again to get final answer
+        create_JSON.create_json(settings.CURRENT_MODE, agent_vision.create_vision_data(), task, tool_results, datetime.now());
+        llm_result = agent_call()
         # Delete executed task
         Task_Manager.delete_task(TODO_FILE, task_id)
     # Scan interval
-    time.sleep(2)
+    time.sleep(settings.CURRENT_HEARTBEAT)

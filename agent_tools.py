@@ -8,15 +8,17 @@ import requests
 import os
 
 
-def select_tool(tools, task):
+def select_tool(response):
     # Einfache Heuristik: Wenn "search" im Task, dann Websuche, wenn "weather", dann Wetter, sonst Bewegung
-    if "search" in task.lower():
+    if "task" in response.lower():
+        return "task"
+    if "search" in response.lower():
         return "web_search"
-    elif "weather" in task.lower():
+    if "weather" in response.lower():
         return "weather"
-    elif any(dir in task.lower() for dir in ["forward", "backward", "left", "right"]):
+    if "move" in response.lower():
         return "movement"
-    elif "gallery" in task.lower():
+    if "gallery" in response.lower():
         return "append_gallery"
     else:
         return None

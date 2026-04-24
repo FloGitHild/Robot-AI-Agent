@@ -10,14 +10,19 @@ def create_json(mode, vision, task, message, time):
         match mode:
             case "PLAY":
                 role_content = "You are there to play with people and have fun."
+                settings.CURRENT_HEARTBEAT = 0
             case "ASSIST":
                 role_content = "You are a helpful assistant."
+                settings.CURRENT_HEARTBEAT = 0
             case "EXPLORE":
                 role_content = "You are a explorer."
+                settings.CURRENT_HEARTBEAT = 0
             case "AUTO":
                 role_content = "You are an autonomous agent."
+                settings.CURRENT_HEARTBEAT = 0
             case "IDLE":
-                role_content = "You are idle."
+                role_content = "You can Interact with people, but dont make any plans or take any actions on your own."
+                settings.CURRENT_HEARTBEAT = 0
             case _:
                 return "Modus unbekannt"
 
@@ -26,7 +31,7 @@ def create_json(mode, vision, task, message, time):
             "llm_modell": settings.local_llm_model,
             "role_content": role_content,
             "message": message,
-            "vision": agent_vision.create_vision_data(),
+            "vision": vision,
             "task": task,
             "time": time
         }
@@ -36,10 +41,9 @@ def create_json(mode, vision, task, message, time):
             "model": "{llm_modell}",
             "messages": [
                 {"role": "system", "content": "{role_content}"},
-                {"role": "user", "content": "User input: {message}\nVision: {vision}\nTask: {task}\nTime: {time}\n "}
+                {"role": "user", "content": "User input: {message}\nVision: {vision}\nTask: {task}\nTime: {time}\n"}
             ]
         }
-
 
         for msg in data["messages"]:
             for key, value in context.items():
