@@ -22,10 +22,6 @@ def save_tasks(data):
         json.dump(data, f, indent=4)
 
 
-def now():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-
 
 # -----------------------------
 # CREATE TASK (SAFE)
@@ -43,7 +39,7 @@ def create_task(
     data = load_tasks()
 
     task = {
-        "created": now(),
+        "created": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "target_time": target_time,
         "type": task_type,
         "category": category,
@@ -106,7 +102,6 @@ def delete_task(name):
 
 def Task_Trigger():
     data = load_tasks()
-    currenttime = now()
     urgent_tasks = []
     for i in data:
         Task_Tartget_Time = datetime.strptime(i["target_time"], '%Y-%m-%d %H:%M:%S')

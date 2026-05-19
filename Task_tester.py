@@ -59,4 +59,4 @@ if __name__ == "__main__":
     )
 
     print("\n================ TASK LIST ================\n")
-    list_tasks()
+    print(list_tasks())
