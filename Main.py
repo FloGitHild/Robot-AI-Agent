@@ -1,49 +1,108 @@
-from datetime import datetime, timedelta
-import os
+import json
 import time
-from urllib import response
-import Task_Manager
-import agent_call
-import agent_tools
-import agent_vision
-import create_JSON
+import sys
 import settings
-TODO_FILE = "ToDo.txt"
 
-# Ensure file exists
-if not os.path.exists(TODO_FILE):
-    with open(TODO_FILE, "w"):
-        pass
+from agent_call import call_llm
+from agent_tools import tool_registry, execute_actions
+from Task_Manager import get_next_task
+from agent_Memory import load_memory
+from agent_vision import create_vision_data
+from agent_start_stop import *
+
+TASK_FILE = "tasks.json"
+running = True
 
 
-# Continuous monitoring loop
-while True:
-    task_list = Task_Manager.scan_tasks(TODO_FILE)
 
-    for task in task_list:
-        task_id, scheduled_time,type, name, description, priority = task
-        print(f"Type: {type} | Task: {name} | Description: {description} | Priority: {priority}")
-        
 
-        # Inputs:
-        # mode: PLAY, ASSIST, EXPLORE, AUTO, IDLE
-        # vision: current vision input (can be empty)
-        # task: current task description
-        # message: user input (can be empty)
+def main_loop():
 
-        settings.CURRENT_MODE = "AUTO" # This can be set based on the task or other conditions
-        #generate promt based on task and execute it
-        
-        # first call of the LLM to get the tools to execute, then execute the tools and call the LLM again to get the final answer
-        message = "no user input"
-        create_JSON.create_json(settings.CURRENT_MODE, agent_vision.create_vision_data(), task, message, datetime.now());
-        llm_result = agent_call()
-        tool_results = agent_tools(llm_result)
+    global running
 
-        #prepare final prompt with tool results and call LLM again to get final answer
-        create_JSON.create_json(settings.CURRENT_MODE, agent_vision.create_vision_data(), task, tool_results, datetime.now());
-        llm_result = agent_call()
-        # Delete executed task
-        Task_Manager.delete_task(TODO_FILE, task_id)
-    # Scan interval
-    time.sleep(settings.CURRENT_HEARTBEAT)
+    # =========================
+    # START SYSTEM
+    # =========================
+    start_ollama()
+    print("🤖 Robot Agent started")
+
+    try:
+        while running:
+
+            # =========================
+            # 1. VISION
+            # =========================
+            vision_raw = create_vision_data()
+
+            try:
+                vision = json.loads(vision_raw) if vision_raw else {}
+            except Exception as e:
+                print("⚠️ Vision parse error:", e)
+                vision = {}
+
+            # =========================
+            # 2. TASK SYSTEM
+            # =========================
+            task = get_next_task(TASK_FILE)
+
+            # =========================
+            # 3. MEMORY
+            # =========================
+            memory = load_memory() if load_memory else []
+            memory = memory[-10:]
+
+            # =========================
+            # 4. BUILD INPUT
+            # =========================
+            input_data = {
+                "vision": vision,
+                "task": task,
+                "memory": memory
+            }
+
+            prompt = json.dumps(input_data, indent=2)
+
+            # =========================
+            # 5. LLM CALL
+            # =========================
+            raw_response = call_llm(prompt)
+
+            # DEBUG (EXTREM WICHTIG)
+            print("\n🧪 RAW LLM OUTPUT:\n", raw_response)
+
+            if not raw_response or raw_response.strip() == "":
+                print("⚠️ Empty LLM response")
+                continue
+
+            # =========================
+            # 6. PARSE JSON
+            # =========================
+            try:
+                response = json.loads(raw_response)
+            except Exception as e:
+                print("❌ JSON parse error:", e)
+                print("RAW:", raw_response)
+                continue
+
+            # =========================
+            # 7. EXECUTE TOOLS
+            # =========================
+            execute_actions(response, tool_registry)
+
+            # =========================
+            # 8. HEARTBEAT
+            # =========================
+            time.sleep(settings.CURRENT_HEARTBEAT)
+
+    except KeyboardInterrupt:
+        print("\n🧠 Ctrl+C detected -> stopping agent")
+        running = False
+
+    finally:
+        stop_ollama()
+        print("✅ Clean shutdown complete")
+        sys.exit(0)
+
+
+if __name__ == "__main__":
+    main_loop()
