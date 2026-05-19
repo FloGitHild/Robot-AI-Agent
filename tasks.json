@@ -1,0 +1,52 @@
+[
+    {
+        "created": "2026-05-19 18:05:35",
+        "target_time": "2026-05-19 23:59:00",
+        "type": "Agent",
+        "category": "Goal",
+        "name": "Balance Robot stabilisieren",
+        "description": "Langfristiges Ziel",
+        "priority": 5,
+        "parent_goal_name": ""
+    },
+    {
+        "created": "2026-05-19 18:05:35",
+        "target_time": "2026-05-25 12:00:00",
+        "type": "Agent",
+        "category": "Goal",
+        "name": "Vision System verbessern",
+        "description": "Kamera + AI",
+        "priority": 4,
+        "parent_goal_name": ""
+    },
+    {
+        "created": "2026-05-19 18:05:35",
+        "target_time": "2026-05-19 20:00:00",
+        "type": "Agent",
+        "category": "Process",
+        "name": "PID Tuning",
+        "description": "Stabilit\u00e4t einstellen",
+        "priority": 4,
+        "parent_goal_name": ""
+    },
+    {
+        "created": "2026-05-19 18:05:35",
+        "target_time": "2026-05-19 18:30:00",
+        "type": "Agent",
+        "category": "Process",
+        "name": "Sensor Noise Filter",
+        "description": "Gyro smoothing",
+        "priority": 3,
+        "parent_goal_name": ""
+    },
+    {
+        "created": "2026-05-19 18:05:35",
+        "target_time": "2026-05-20 07:00:00",
+        "type": "User",
+        "category": "None",
+        "name": "Wecker",
+        "description": "Aufstehen",
+        "priority": 2,
+        "parent_goal_name": ""
+    }
+]
