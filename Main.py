@@ -21,8 +21,8 @@ while True:
     task_list = Task_Manager.scan_tasks(TODO_FILE)
 
     for task in task_list:
-        task_id, scheduled_time, name, description, priority = task
-        print(f"Task: {name} | Description: {description} | Priority: {priority}")
+        task_id, scheduled_time,type, name, description, priority = task
+        print(f"Type: {type} | Task: {name} | Description: {description} | Priority: {priority}")
         
 
         # Inputs:

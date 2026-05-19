@@ -1,12 +1,12 @@
 from datetime import datetime
 import uuid
 
-def add_task(file, time_str, name, description, priority):
+def add_task(file, time_str,type, name, description, priority):
     """
     Add a new task to the ToDo file with a UUID.
     """
     task_id = str(uuid.uuid4())
-    entry = f"{task_id}#{time_str}#{name}#{description}#{priority}\n"
+    entry = f"{task_id}#{time_str}#{type}#{name}#{description}#{priority}\n"
     with open(file, "a", encoding="utf-8") as f:
         f.write(entry)
     return task_id
@@ -23,13 +23,13 @@ def scan_tasks(file):
     with open(file, "r", encoding="utf-8") as f:
         for line in f:
             parts = line.strip().split("#")
-            if len(parts) != 5:
+            if len(parts) != 6:
                 continue  # ignore malformed old lines
 
-            task_id, time_str, name, description, priority = parts
+            task_id, time_str, type, name, description, priority = parts
             task_time = datetime.strptime(time_str, "%Y-%m-%d %H:%M:%S")
             if task_time <= now:
-                tasks.append((task_id, task_time, name, description, int(priority)))
+                tasks.append((task_id, task_time,type, name, description, int(priority)))
 
     # Sort by time first, then by priority (descending)
     tasks.sort(key=lambda x: (x[1], -x[4]))
@@ -47,3 +47,8 @@ def delete_task(file, task_id_to_delete):
 
     with open(file, "w", encoding="utf-8") as f:
         f.writelines(new_lines)
+
+
+def change_priority(file, task_ID):
+    # hier funktion zum ändern der Prio
+    print()
