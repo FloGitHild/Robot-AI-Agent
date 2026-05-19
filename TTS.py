@@ -8,7 +8,7 @@ CONFIG = "models/de_DE-kerstin-low.onnx.json"
 out_file = "/home/florian/Daten/Florian/Freizeit/Robot-AI-Agent/robot_voice.wav"
 
 
-def TTS_Say(text, speed=0.8):
+def TTS_Say(text, speed=0.75):
 
     cmd = [
         PIPER,
@@ -21,7 +21,6 @@ def TTS_Say(text, speed=0.8):
     result = subprocess.run(cmd, input=text.encode("utf-8"), capture_output=True, timeout=30)
 
     if result.returncode != 0:
-        print(result.stderr.decode())
         return
 
     if not os.path.exists(out_file):

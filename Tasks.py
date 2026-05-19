@@ -101,11 +101,14 @@ def delete_task(name):
 
 
 def Task_Trigger():
-    data = load_tasks()
+    data = list_tasks()
     urgent_tasks = []
+    future_tasks = []
     for i in data:
         Task_Tartget_Time = datetime.strptime(i["target_time"], '%Y-%m-%d %H:%M:%S')
-        if datetime.now() >= Task_Tartget_Time:
+        if datetime.now() >= Task_Tartget_Time or Task_Tartget_Time == "-1":
             urgent_tasks.append(i)
-    
-    return urgent_tasks
+        else:
+            future_tasks.append(i)
+
+    return urgent_tasks, future_tasks
